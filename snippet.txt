@@ -1,0 +1,190 @@
+Plugin Head
+-------------------------------------------
+- Abbreviation: plugin_head
+- Exapnded Text:
+
+
+    /*
+    Plugin Name: ${PluginName}
+    Plugin URI: http://${PlugUri newVarName default="example.com"}
+    Description: ${Description}
+    Version: ${Version newVarName default="0.1"}
+    Author: ${Author newVarName default="Your Name"}
+    Author URI: http://${AuthUri newVarName default="example.com"}
+    */
+
+
+
+Register Post
+-------------------------------------------
+
+- Abbreviation: register_post
+- Expanded Text:
+
+    register_post_type( '${PostTypeName}', array(
+        'label' => __( '${Label}', '${domain}' ),
+        'description' => __( '${Description}', '${domain}' ),
+        'public' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'capability_type' => '${post}',
+        'hierarchical' => false,
+        'rewrite' => array('slug' => '${slug}'),
+        'query_var' => true,
+        'supports' => array('title', 'editor', 'custom-fields', 'comments', 'author',),
+        'labels' => array(
+            'name' => __( '${LabelName}', '${domain}' ),
+            'singular_name' => __( '${SingluarName}', '${domain}' ),
+            'menu_name' => __( '${SingluarName}', '${domain}' ),
+            'add_new' => __( 'Add ${SingluarName}', '${domain}' ),
+            'add_new_item' => __( 'Add New ${SingluarName}', '${domain}' ),
+            'edit' => __( 'Edit', '${domain}' ),
+            'edit_item' => __( 'Edit ${SingluarName}', '${domain}' ),
+            'new_item' => __( 'New ${SingluarName}', '${domain}' ),
+            'view' => __( 'View ${SingluarName}', '${domain}' ),
+            'view_item' => __( 'View ${SingluarName}', '${domain}' ),
+            'search_items' => __( 'Search ${LabelName}', '${domain}' ),
+            'not_found' => __( 'No ${LabelName} Found', '${domain}' ),
+            'not_found_in_trash' => __( 'No ${LabelName} Found in Trash', '${domain}' ),
+            'parent' => __( 'Parent ${SingluarName}', '${domain}' ),
+        ),
+    ) );
+
+
+Schedule Event
+-------------------------------------------
+
+- Abbreviation: schedule_event
+- Expanded Text:
+
+    /**
+     * Action to run event on
+     * Doesn't need to be an existing WordPress action
+     *
+     * @param string - name of action
+     * @param string - name of function to run on this action
+     */
+    add_action('${EventAction newVarName default="event_action"}', '${FunctionName}');
+
+    /**
+     * Function to be called when event is fired
+     *
+     * @return void
+     */
+    function ${FunctionName}() {
+        ${selection}${cursor}
+    }
+
+    /**
+     * Schedule the event
+     *
+     * @param int - unix timestamp of when to run the event
+     * @param string - action to fire at the timestamp
+     */
+    wp_schedule_event(${timestamp}, '${frequency}', '${EventAction}');
+
+Shortcode
+-------------------------------------------
+
+- Abbreviation: shortcode
+- Expanded Text: 
+
+    /**
+     * ${Short newVarName default="Short Description"}
+     *
+     * ${Long newVarName default="Long Description"}
+     * 
+     * <code>
+     * //example code
+     * <code>
+     * 
+     * @param array $atts User defined attributes in shortcode tag
+     * @param string $contents shortcode content text
+     */
+    function ${functionName}( $atts, $contents = null ) {
+        $atts = extract( shortcode_atts( array(
+            'default' => 'values'
+        ), $atts ) );
+
+        // do shortcode actions here
+        ${selection}${cursor}
+    }
+    add_shortcode('${shortcode-id}','${functionName}');
+
+
+Widget
+-------------------------------------------
+
+- Abbreviation: widget
+- Expanded Text:
+
+    /**
+     * New WordPress Widget format
+     * Wordpress 2.8 and above
+     * @see http://codex.wordpress.org/Widgets_API#Developing_Widgets
+     */
+    class ${PREFIX_Name}_Widget extends WP_Widget {
+
+        /**
+         * Constructor
+         *
+         * @return void
+         **/
+        function ${PREFIX_Name}_Widget() {
+            $widget_ops = array( 'classname' => '${CSSClass newVarName default="class-name"}', 'description' => '${Description}' );
+            $this->WP_Widget( '${CSSClass}', '${Title}', $widget_ops );
+        }
+
+        /**
+         * Outputs the HTML for this widget.
+         *
+         * @param array $args An array of standard parameters for widgets in this theme
+         * @param array $instance An array of settings for this widget instance
+         * @return void Echoes it's output
+         **/
+        function widget( $args, $instance ) {
+            extract( $args, EXTR_SKIP );
+            echo $before_widget;
+            echo $before_title;
+            echo '$4'; // Can set this with a widget option, or omit altogether
+            echo $after_title;
+
+            //
+            // Widget display logic goes here
+            //
+            ${selection}${cursor}
+
+            echo $after_widget;
+        }
+
+        /**
+         * Deals with the settings when they are saved by the admin. Here is
+         * where any validation should be dealt with.
+         *
+         * @param array $new_instance An array of new settings as submitted by the admin
+         * @param array $old_instance An array of the previous settings
+         * @return array The validated and (if necessary) amended settings
+         **/
+        function update( $new_instance, $old_instance ) {
+            // update logic goes here
+            $updated_instance = $new_instance;
+            return $updated_instance;
+        }
+
+        /**
+         * Displays the form for this widget on the Widgets page of the WP Admin area.
+         *
+         * @param array $instance An array of the current settings for this widget
+         * @return void Echoes it's output
+         **/
+        function form( $instance ) {
+            $instance = wp_parse_args( (array) $instance, array( 'key' => 'val' ) );
+
+            // display field names here using:
+            // $this->get_field_id('option_name') - the CSS ID
+            // $this->get_field_name('option_name') - the HTML name
+            // $instance['option_name'] - the option value
+        }
+    }
+
+    add_action( 'widgets_init', create_function( '', "register_widget('${PREFIX_Name}_Widget');" ) );
